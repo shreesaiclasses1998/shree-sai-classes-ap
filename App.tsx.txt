@@ -1,0 +1,84 @@
+
+import React, { useState } from 'react';
+import { View } from './types';
+import ConceptExplainer from './components/ConceptExplainer';
+import QuizGenerator from './components/QuizGenerator';
+import { BrainCircuitIcon, LightbulbIcon, FileQuestionIcon } from './components/icons';
+
+const ActionCard: React.FC<{
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+}> = ({ title, description, icon, onClick }) => (
+  <button
+    onClick={onClick}
+    className="bg-base-300 p-8 rounded-2xl text-left w-full transition-all duration-300 transform hover:scale-105 hover:bg-base-200 shadow-lg hover:shadow-brand-secondary/20"
+  >
+    <div className="flex items-start gap-6">
+      <div className="text-brand-secondary bg-brand-secondary/10 p-4 rounded-full">
+        {icon}
+      </div>
+      <div>
+        <h3 className="text-2xl font-bold text-white">{title}</h3>
+        <p className="text-gray-400 mt-2">{description}</p>
+      </div>
+    </div>
+  </button>
+);
+
+const App: React.FC = () => {
+  const [view, setView] = useState<View>(View.HOME);
+
+  const renderHome = () => (
+    <div className="text-center animate-slide-in-up">
+      <BrainCircuitIcon className="mx-auto h-24 w-24 text-brand-primary animate-pulse-fast"/>
+      <h1 className="text-4xl md:text-6xl font-extrabold text-white mt-4">
+        Shree sai Classes
+      </h1>
+      <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-400">
+        Your personal AI companion from Shree sai Classes for mastering 11th & 12th grade science.
+        Explain complex topics, generate practice quizzes, and accelerate your learning.
+      </p>
+      <div className="mt-12 max-w-2xl mx-auto grid grid-cols-1 gap-8">
+        <ActionCard
+          title="Concept Explainer"
+          description="Get clear, simple explanations for any scientific concept or theory."
+          icon={<LightbulbIcon className="w-8 h-8" />}
+          onClick={() => setView(View.EXPLAINER)}
+        />
+        <ActionCard
+          title="Quiz Generator"
+          description="Create custom multiple-choice quizzes to test your knowledge on specific topics."
+          icon={<FileQuestionIcon className="w-8 h-8" />}
+          onClick={() => setView(View.QUIZ)}
+        />
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (view) {
+      case View.EXPLAINER:
+        return <ConceptExplainer setView={setView} />;
+      case View.QUIZ:
+        return <QuizGenerator setView={setView} />;
+      case View.HOME:
+      default:
+        return renderHome();
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200 flex flex-col">
+      <main className="flex-grow flex items-center justify-center p-4">
+        {renderContent()}
+      </main>
+      <footer className="text-center p-4 text-gray-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} Shree sai Classes. Empowering the next generation of scientists.</p>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
